@@ -1,0 +1,22 @@
+[
+{
+  "directory": "/home/hans/Coding/user-land-filesystem/fs/toyfs/build",
+  "command": "/usr/bin/g++ -I/home/hans/Coding/user-land-filesystem/fs/toyfs/./include  -D_FILE_OFFSET_BITS=64 -no-pie -g -Wall --pedantic -g -o CMakeFiles/toyfs.dir/src/toyfs.cc.o -c /home/hans/Coding/user-land-filesystem/fs/toyfs/src/toyfs.cc",
+  "file": "/home/hans/Coding/user-land-filesystem/fs/toyfs/src/toyfs.cc"
+},
+{
+  "directory": "/home/hans/Coding/user-land-filesystem/fs/toyfs/build",
+  "command": "/usr/bin/g++ -I/home/hans/Coding/user-land-filesystem/fs/toyfs/./include  -D_FILE_OFFSET_BITS=64 -no-pie -g -Wall --pedantic -g -o CMakeFiles/toyfs.dir/src/toyfs/io.cc.o -c /home/hans/Coding/user-land-filesystem/fs/toyfs/src/toyfs/io.cc",
+  "file": "/home/hans/Coding/user-land-filesystem/fs/toyfs/src/toyfs/io.cc"
+},
+{
+  "directory": "/home/hans/Coding/user-land-filesystem/fs/toyfs/build",
+  "command": "/usr/bin/g++ -I/home/hans/Coding/user-land-filesystem/fs/toyfs/./include  -D_FILE_OFFSET_BITS=64 -no-pie -g -Wall --pedantic -g -o CMakeFiles/toyfs.dir/src/toyfs/mount.cc.o -c /home/hans/Coding/user-land-filesystem/fs/toyfs/src/toyfs/mount.cc",
+  "file": "/home/hans/Coding/user-land-filesystem/fs/toyfs/src/toyfs/mount.cc"
+},
+{
+  "directory": "/home/hans/Coding/user-land-filesystem/fs/toyfs/build",
+  "command": "/usr/bin/g++ -I/home/hans/Coding/user-land-filesystem/fs/toyfs/./include  -D_FILE_OFFSET_BITS=64 -no-pie -g -Wall --pedantic -g -o CMakeFiles/toyfs.dir/src/toyfs/sblock.cc.o -c /home/hans/Coding/user-land-filesystem/fs/toyfs/src/toyfs/sblock.cc",
+  "file": "/home/hans/Coding/user-land-filesystem/fs/toyfs/src/toyfs/sblock.cc"
+}
+]
