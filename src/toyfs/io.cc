@@ -55,7 +55,7 @@ namespace toy {
     uint8_t *buffer = (uint8_t *) std::malloc((size_t) read_blocks * io_sz);
 
     // Read block by block
-    for (int i = 0; i < read_blocks; i++) {
+    for (uint32_t i = 0; i < read_blocks; i++) {
       ddriver_read(driver_fd, (char *) (buffer + i * io_sz), io_sz);
     }
 
@@ -89,7 +89,7 @@ namespace toy {
 
     // Then write buffer back
     ddriver_seek(driver_fd, lower_bound, SEEK_SET);
-    for (int i = 0; i < write_blocks; i++) {
+    for (uint32_t i = 0; i < write_blocks; i++) {
       ddriver_write(driver_fd, (char *) (buffer + i * io_sz), io_sz);
     }
 

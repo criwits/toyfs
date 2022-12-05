@@ -20,8 +20,6 @@ namespace toy {
   }
 
   superblock::~superblock() {
-    // Unlock
-    unlock();
     // Sync into disk
     sync();
   }
@@ -98,8 +96,16 @@ namespace toy {
     Log("\tBlocks: %8d of %8d used (%.2f%%)", sblock.block_usage, sblock.block_cnt,sblock.block_usage / (float) sblock.block_cnt);
   }
 
+  void superblock::inode_modify(int offset) {
+    sblock.inode_usage += offset;
+  }
+
+  void superblock::block_modify(int offset) {
+    sblock.block_usage += offset;
+  }
+
   void superblock::sync() {
     fs_io->write(TOY_SBLOCK_OFFSET, (uint8_t *) (&sblock), sizeof(sblock));
   }
 
-};
+}

@@ -24,28 +24,53 @@ namespace toy {
    */
   toyfs::toyfs(std::string device) {
     Log("ToyFS initialiser, current device path = %s", device.c_str());
+
     // Initialise IO helper
     fs_io = new io(device);
+
     // Read superblock
     sblock = new superblock(fs_io);
+
     // Check magic number
+    bool is_init = false;
     if (sblock->check_magic()) {
       // Magic number detected
       sblock->print();
-
     } else {
       // Magic number invalid, init first
       Log("Warning: invalid magic number; initialise first");
       sblock->init();
+      is_init = true;
     }
 
-    // Mount and lock
+    // Change sblock status
     sblock->lock();
+
+    // Initialise inode manager
+    inode_mgr = new inodes(fs_io, sblock);
+    // Initialise block manager
+    block_mgr = new blocks(fs_io, sblock);
+
+    if (is_init) {
+      // Create root inode
+      auto root = inode_mgr->create_root();
+      // Allocate block for root dentry
+      auto block_no = block_mgr->create_root();
+      root->index.push_back(block_no);
+      root->sync();
+
+      sblock->sync();
+      delete root;
+    }
   }
 
   toyfs::~toyfs() {
     Log("ToyFS destructor, unmounting device");
+    sblock->unlock();
+
+    delete inode_mgr;
+    delete block_mgr;
     delete sblock;
     delete fs_io;
   }
-};
+}
