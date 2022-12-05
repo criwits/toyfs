@@ -62,12 +62,18 @@ namespace toy {
       sblock->sync();
       delete root;
     }
+
+    // Open root directory
+    root_dir = new directory(fs_io, inode_mgr->get_inode(2), block_mgr, inode_mgr);
+
   }
 
   toyfs::~toyfs() {
     Log("ToyFS destructor, unmounting device");
+
     sblock->unlock();
 
+    delete root_dir;
     delete inode_mgr;
     delete block_mgr;
     delete sblock;

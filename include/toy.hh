@@ -73,14 +73,14 @@ namespace toy {
   };
 
   struct toy_dentry {
-    char fname[256];
+    char fname[TOY_MAX_FILENAME_LENGTH];
     uint32_t ino;
     file_type_t ftype;
   };
 
   /*******************************************************************
-   * CLASSES
-   ********************************************************************/
+   * CLASSES FOR BASIC FS STRUCTURES
+   *******************************************************************/
 
   class io {
     std::string device_name;
@@ -140,12 +140,12 @@ namespace toy {
     uint32_t ino;
     file_type_t type;
 
-
     inode(io *, uint32_t, uint32_t, file_type_t);
     inode(io *, uint32_t);
   public:
     uint32_t size;
     uint32_t children;
+    const uint32_t get_ino() const;
     std::vector<uint32_t> index;
     ~inode();
     void sync();
@@ -164,7 +164,9 @@ namespace toy {
     ~inodes();
     uint32_t get_addr(uint32_t);
     inode *create_root();
-    inode *alloc_inode();
+    inode *get_inode(uint32_t);
+    uint32_t alloc_inode(file_type_t);
+    void dealloc_inode(uint32_t);
   };
 
   class blocks {
@@ -180,14 +182,28 @@ namespace toy {
     uint32_t get_addr(uint32_t);
     uint32_t create_root();
     uint32_t alloc_block();
+    void dealloc_block(uint32_t);
   };
+
+
+  /*******************************************************************
+   * CLASSES FOR DIRECTORY AND FILE
+   *******************************************************************/
 
   class directory {
     io *fs_io;
-  public:
+    inode *node;
+    blocks *blkio;
+    inodes *inodeio;
+
     std::vector<struct toy_dentry> entries;
-    directory(io *, inode *);
+
+  public:
+    directory(io *, inode *, blocks *, inodes *);
     ~directory();
+    void sync();
+    uint32_t mkdir(std::string);
+
 
   };
 
@@ -201,6 +217,7 @@ namespace toy {
     superblock *sblock;
     inodes *inode_mgr;
     blocks *block_mgr;
+    directory *root_dir;
   public:
     toyfs(std::string);
     ~toyfs();

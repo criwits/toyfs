@@ -32,18 +32,30 @@ namespace toy {
   uint32_t blocks::create_root() {
     // block 0 is never used; just occupy
     block_bitmap->set(0, 1);
-    sblock->block_modify(1);
-
     block_bitmap->set(1, 1);
+    sblock->block_modify(2);
     return 1;
   }
 
   uint32_t blocks::alloc_block() {
     // Check bitmap, if 0 then no valid block
     uint32_t val = block_bitmap->seek();
-    if (val != 0) { 
-      block_bitmap->set(val, 1); 
+    if (val == 0) {
+      return 0;
     }
+    block_bitmap->set(val, 1); 
+    sblock->block_modify(1);
     return val;
   }
+
+  void blocks::dealloc_block(uint32_t block_no) {
+    // Check bitmap, if 0 then return
+    if (block_bitmap->get(block_no) == 0) {
+      return;
+    }
+    block_bitmap->set(block_no, 0);
+    sblock->block_modify(-1);
+  }
+
+
 }

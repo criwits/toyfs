@@ -57,6 +57,10 @@ namespace toy {
     std::free(buffer);
   }
 
+  const uint32_t inode::get_ino() const {
+    return ino;
+  }
+
   inode::~inode() {}
   
   /**
@@ -72,6 +76,10 @@ namespace toy {
     buffer->type = type;
     buffer->sz = size;
     buffer->dir_child_cnt = children;
+    
+    for (int i = 0; i < TOY_INODE_DPTR; i++) {
+      buffer->blk_dptr[i] = 0;
+    }
 
     int i = 0;
     for (auto blkno : index) {
