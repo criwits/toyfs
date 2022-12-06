@@ -23,7 +23,6 @@ namespace toy {
   }
 
   bitmap::~bitmap() {
-    sync();
     std::free(buffer);
   }
 

@@ -89,7 +89,9 @@ namespace toy {
     // Write back
     fs_io->write(addr, (uint8_t *) buffer, sizeof(struct toy_inode));
 
+
     // Delete the buffer
     std::free(buffer);
+
   }
 }

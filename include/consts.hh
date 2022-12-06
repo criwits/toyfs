@@ -24,5 +24,7 @@
 #define TOY_INODE_DPTR 8
 #define TOY_INODE_IPTR 2
 
+#define TOY_DEFAULT_MOD 0777
+
 
 #endif

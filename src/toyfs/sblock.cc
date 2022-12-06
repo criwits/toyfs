@@ -19,10 +19,7 @@ namespace toy {
     fs_io->read(TOY_SBLOCK_OFFSET, (uint8_t *) (&sblock), sizeof(sblock));
   }
 
-  superblock::~superblock() {
-    // Sync into disk
-    sync();
-  }
+  superblock::~superblock() {}
 
   void superblock::lock() {
     sblock.status = MOUNTED;
@@ -81,8 +78,6 @@ namespace toy {
     sblock.block_bitmap_address = TOY_SBLOCK_OFFSET + sblock_size + inode_bitmap_size;
     sblock.inode_address = TOY_SBLOCK_OFFSET + sblock_size + inode_bitmap_size + block_bitmap_size;
     sblock.block_address = TOY_SBLOCK_OFFSET + sblock_size + inode_bitmap_size + block_bitmap_size + inode_total_size;
-
-    sync();
   }
 
   const struct toy_superblock superblock::get_sblock() const {

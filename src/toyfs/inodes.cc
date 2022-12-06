@@ -39,6 +39,7 @@ namespace toy {
     inode_bitmap->set(1, 1);
     sblock->inode_modify(2);
 
+    inode_bitmap->set(2, 1);
     auto root = new inode(fs_io, get_addr(2), 2, DIR);
     sblock->inode_modify(1);
 
@@ -80,6 +81,10 @@ namespace toy {
     inode_bitmap->set(ino, 0);
     sblock->inode_modify(-1);
 
+  }
+
+  void inodes::sync() {
+    inode_bitmap->sync();
   }
 
   

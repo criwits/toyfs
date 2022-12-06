@@ -57,5 +57,8 @@ namespace toy {
     sblock->block_modify(-1);
   }
 
+  void blocks::sync() {
+    block_bitmap->sync();
+  }
 
 }

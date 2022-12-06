@@ -15,6 +15,7 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <sys/stat.h>
 #include "consts.hh"
 #include "log.hh"
 
@@ -96,7 +97,6 @@ namespace toy {
     const int io_size() const;
   };
   
-
   class superblock {
     io *fs_io;
     struct toy_superblock sblock;
@@ -167,6 +167,7 @@ namespace toy {
     inode *get_inode(uint32_t);
     uint32_t alloc_inode(file_type_t);
     void dealloc_inode(uint32_t);
+    void sync();
   };
 
   class blocks {
@@ -183,6 +184,7 @@ namespace toy {
     uint32_t create_root();
     uint32_t alloc_block();
     void dealloc_block(uint32_t);
+    void sync();
   };
 
 
@@ -202,13 +204,25 @@ namespace toy {
     directory(io *, inode *, blocks *, inodes *);
     ~directory();
     void sync();
+    struct toy_dentry get_child(std::string);
+    struct toy_dentry get_path(std::string);
     uint32_t mkdir(std::string);
-
-
+    uint32_t mknod(std::string);
+    const std::vector<struct toy_dentry> get_entries() const;
   };
 
+  class file {
+    io *fs_io;
+    inode *node;
+    blocks *blkio;
+    inodes *inodeio;
 
+  public:
+    file(io *, inode *, blocks *, inodes *);
+    ~file();
+    void sync();
 
+  };
 
 
 
@@ -217,10 +231,19 @@ namespace toy {
     superblock *sblock;
     inodes *inode_mgr;
     blocks *block_mgr;
+
+    inode *root_inode;
     directory *root_dir;
+
   public:
     toyfs(std::string);
     ~toyfs();
+    
+    int getattr(std::string, struct stat *);
+    int mkdir(std::string);
+    int mknod(std::string);
+    const std::vector<std::string> readdir(std::string) const;
+    
   };
 
 

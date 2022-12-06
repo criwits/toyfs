@@ -40,6 +40,7 @@ namespace toy {
       // Magic number invalid, init first
       Log("Warning: invalid magic number; initialise first");
       sblock->init();
+      sblock->sync();
       is_init = true;
     }
 
@@ -52,31 +53,45 @@ namespace toy {
     block_mgr = new blocks(fs_io, sblock);
 
     if (is_init) {
-      // Create root inode
+      // Create root inode, empty
       auto root = inode_mgr->create_root();
       // Allocate block for root dentry
+
       auto block_no = block_mgr->create_root();
       root->index.push_back(block_no);
       root->sync();
 
-      sblock->sync();
       delete root;
     }
 
-    // Open root directory
-    root_dir = new directory(fs_io, inode_mgr->get_inode(2), block_mgr, inode_mgr);
+    root_inode = inode_mgr->get_inode(2);
 
+    // Open root directory
+    root_dir = new directory(fs_io, root_inode, block_mgr, inode_mgr);
   }
 
   toyfs::~toyfs() {
-    Log("ToyFS destructor, unmounting device");
 
-    sblock->unlock();
-
+    Log("Syncing root directory");
+    root_dir->sync();
     delete root_dir;
+
+    Log("Syncing root inode");
+    root_inode->sync();
+    delete root_inode;
+
+    Log("Syncing bitmaps");
+    inode_mgr->sync();
+    block_mgr->sync();
     delete inode_mgr;
     delete block_mgr;
+
+    Log("Syncing superblock");
+    sblock->unlock();
+    sblock->sync();
     delete sblock;
+
+    Log("Detaching IO helper");
     delete fs_io;
   }
 }
