@@ -1,9 +1,9 @@
 /**
- * @file mkdir.cc
+ * @file truncate.cc
  * @author your name (you@domain.com)
  * @brief 
  * @version 0.1
- * @date 2022-12-06
+ * @date 2022-12-09
  * 
  * @copyright Copyright (c) 2022
  * 
@@ -12,23 +12,16 @@
 #include "toy.hh"
 
 namespace toy {
-  /**
-   * @brief Create directory
-   * 
-   * @param path 
-   * @param mode 
-   * @return int 
-   */
-  int toyfs::mkdir(std::string path) {
+  int toyfs::truncate(std::string path, off_t offset) {
     bool is_root_dir = (path.find_last_of('/') == 0);
     directory *parent_dir;
     inode *parent_inode;
+
     // if root
     if (is_root_dir) {
       parent_dir = root_dir;
     } else {
       // First, get the parent
-      Log("Trying to mkdir %s", path.c_str());
       auto parent = root_dir->get_path(path.substr(0, path.find_last_of('/')));
       if (parent.ino == 0 || parent.ftype != DIR) {
         return -ENOENT;
@@ -40,12 +33,25 @@ namespace toy {
     }
 
 
-    // Create dir
+    // Get the file
     int ret;
-    if (parent_dir->mkdir(path.substr(path.find_last_of('/') + 1)) == 0) {
-      ret = -EEXIST;
+    auto fino = parent_dir->get_child(path.substr(path.find_last_of('/') + 1));
+    if (fino.ino == 0) { 
+      ret = -ENOENT; 
+    } else
+    if (fino.ftype == DIR) {
+      ret = -EISDIR;
     } else {
+      auto finode = inode_mgr->get_inode(fino.ino);
+      auto f = new file(fs_io, finode, block_mgr, inode_mgr);
+
+      f->truncate(offset);
       ret = 0;
+
+      f->sync();
+      delete f;
+      finode->sync();
+      delete finode;
     }
 
     if (!is_root_dir) {
@@ -54,5 +60,6 @@ namespace toy {
     }
 
     return ret;
+
   }
-} 
+}

@@ -32,7 +32,7 @@
 #define ANSI_BG_WHITE   "\33[1;47m"
 #define ANSI_NONE       "\33[0m"
 
-#define CONFIG_ENABLE_LOG
+// #define CONFIG_ENABLE_LOG
 
 #ifdef CONFIG_ENABLE_LOG
 #define Log(fmt, ...) \

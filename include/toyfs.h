@@ -31,6 +31,12 @@ int toyfs_mkdir(const char *path, mode_t mode);
 int toyfs_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi);
 int toyfs_mknod(const char* path, mode_t mode, dev_t dev);
 int toyfs_utimens(const char* path, const struct timespec tv[2]);
+int toyfs_read(const char* path, char* buf, size_t size, off_t offset, struct fuse_file_info *fi);
+int toyfs_write(const char* path, const char* buf, size_t size, off_t offset, struct fuse_file_info *fi);
+int toyfs_truncate(const char *path, off_t offset);
+int toyfs_open(const char* path, struct fuse_file_info* fi);
+int toyfs_opendir(const char* path, struct fuse_file_info* fi);
+int toyfs_access(const char* path, int type);
 
 #ifdef __cplusplus
 }

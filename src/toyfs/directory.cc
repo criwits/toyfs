@@ -22,12 +22,12 @@ namespace toy {
   directory::directory(io *fs_io, inode *node, blocks *blkio, inodes *inodeio): 
     fs_io(fs_io), node(node), blkio(blkio), inodeio(inodeio) {
     // Load indexes
-    int children_cnt = 0;
+    uint32_t children_cnt = 0;
     for (auto idx : node->index) {
       // idx now is a block number, first need to open it
       auto buf = (struct toy_dentry *) std::malloc(TOY_DATA_BLOCK_SIZE);
       fs_io->read(blkio->get_addr(idx), (uint8_t *) buf, TOY_DATA_BLOCK_SIZE);
-      for (int i = 0; i < (TOY_DATA_BLOCK_SIZE / sizeof(struct toy_dentry)) && children_cnt < node->children; i++) {
+      for (uint32_t i = 0; i < (TOY_DATA_BLOCK_SIZE / sizeof(struct toy_dentry)) && children_cnt < node->children; i++) {
         entries.push_back(buf[i]);
         children_cnt++;
       }
@@ -47,30 +47,29 @@ namespace toy {
    */
   void directory::sync() {
     // First, calculate how many data blocks are needed
-    auto entry_size = entries.size() * sizeof(struct toy_dentry);
     auto dblock_cnt = CEIL(entries.size(), (TOY_DATA_BLOCK_SIZE / sizeof(struct toy_dentry))) / (TOY_DATA_BLOCK_SIZE / sizeof(struct toy_dentry));
     if (dblock_cnt == 0) { 
       dblock_cnt = 1; 
     }
 
     // Adjust blocks if necessary
-    for (int i = 0; i < (dblock_cnt - node->index.size()); i++) {
+    for (uint32_t i = 0; i < (dblock_cnt - node->index.size()); i++) {
       // Case 1: dblock_cnt > index.size(), need allocate more blocks
       node->index.push_back(blkio->alloc_block());
     }
-    for (int i = 0; i < (node->index.size() - dblock_cnt); i++) {
+    for (uint32_t i = 0; i < (node->index.size() - dblock_cnt); i++) {
       // Case 2: index.size() > dblock_cnt, can reduce block usage
-      blkio->dealloc_block(node->index[node->index.size()]);
+      blkio->dealloc_block(node->index[node->index.size() - 1]);
       node->index.pop_back();
     }
 
     // Write them back
-    int children_cnt = 0;
+    uint32_t children_cnt = 0;
     for (auto idx: node->index) {
       // Allocate buffer for block
       auto buf = (struct toy_dentry *) std::malloc(TOY_DATA_BLOCK_SIZE);
       // Then write back entries
-      for (int i = 0; i < (TOY_DATA_BLOCK_SIZE / sizeof(struct toy_dentry)) && children_cnt < entries.size(); i++) {
+      for (uint32_t i = 0; i < (TOY_DATA_BLOCK_SIZE / sizeof(struct toy_dentry)) && children_cnt < entries.size(); i++) {
         buf[i] = entries[children_cnt];
         children_cnt++;
       }

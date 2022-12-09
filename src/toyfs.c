@@ -41,7 +41,13 @@ static struct fuse_operations operations = {
   .mkdir = toyfs_mkdir,
   .readdir = toyfs_readdir,
   .mknod = toyfs_mknod,
-  .utimens = toyfs_utimens
+  .utimens = toyfs_utimens,
+  .read = toyfs_read,
+  .write = toyfs_write,
+  .truncate = toyfs_truncate,
+  .open = toyfs_open,
+  .opendir = toyfs_opendir,
+  .access = toyfs_access
 };
 
 

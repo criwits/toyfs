@@ -221,7 +221,9 @@ namespace toy {
     file(io *, inode *, blocks *, inodes *);
     ~file();
     void sync();
-
+    void truncate(off_t);
+    int read(uint8_t *, size_t, off_t);
+    int write(const uint8_t *, size_t, off_t);
   };
 
 
@@ -243,6 +245,9 @@ namespace toy {
     int mkdir(std::string);
     int mknod(std::string);
     const std::vector<std::string> readdir(std::string) const;
+    int read(std::string, uint8_t *, size_t, off_t);
+    int write(std::string, const uint8_t *, size_t, off_t);
+    int truncate(std::string, off_t);
     
   };
 
