@@ -15,6 +15,8 @@ namespace toy {
   blocks::blocks(io *fs, superblock *super): fs_io(fs), sblock(super) {
     // Load bitmaps
     block_bitmap = new bitmap(fs_io, sblock->get_sblock().block_bitmap_address, sblock->get_sblock().block_cnt);
+    // printf("BLOCK BITMAP:\n");
+    // block_bitmap->print();
     // Get args
     block_addr = sblock->get_sblock().block_address;
     block_size = TOY_DATA_BLOCK_SIZE;

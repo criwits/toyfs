@@ -11,6 +11,7 @@
 
 #include "toy.hh"
 #include <cstdlib>
+#include <cstdio>
 
 namespace toy {
   bitmap::bitmap(io *fs, uint32_t address, uint32_t cnt): fs_io(fs), addr(address), bitcnt(cnt) {
@@ -64,5 +65,22 @@ namespace toy {
 
   void bitmap::sync() {
     fs_io->write(addr, buffer, size);
+  }
+
+
+  void bitmap::print() {
+    // Print the bitmap
+    for (uint32_t i = 0; i < bitcnt; i++) {
+      if (i % 32 == 0) {
+        std::printf("0x%08x - 0x%08x: ", i, (i + 31 < bitcnt - 1) ? i + 31 : bitcnt - 1);
+      }
+
+      std::printf("%1d", get(i));
+
+      if ((i + 1) % 32 == 0 || i + 1 == bitcnt) {
+        std::printf("\n");
+      }
+
+    }
   }
 }

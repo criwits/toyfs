@@ -131,6 +131,7 @@ namespace toy {
     uint32_t seek();
     uint32_t count();
     void sync();
+    void print();
   };
 
   class inode {

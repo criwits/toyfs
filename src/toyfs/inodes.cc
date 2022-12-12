@@ -15,6 +15,8 @@ namespace toy {
   inodes::inodes(io *fs, superblock *super): fs_io(fs), sblock(super) {
     // Load bitmaps
     inode_bitmap = new bitmap(fs_io, sblock->get_sblock().inode_bitmap_address, sblock->get_sblock().inode_cnt);
+    // printf("INODE BITMAP: \n");
+    // inode_bitmap->print();
     // Get args
     inode_addr = sblock->get_sblock().inode_address;
     inode_size = sizeof(struct toy_inode);
