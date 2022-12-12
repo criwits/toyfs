@@ -1,6 +1,6 @@
 /**
  * @file readdir.cc
- * @author your name (you@domain.com)
+ * @author Hans WAN (hanswan@tom.com)
  * @brief 
  * @version 0.1
  * @date 2022-12-06
